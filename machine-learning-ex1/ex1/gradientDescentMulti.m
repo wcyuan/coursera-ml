@@ -18,15 +18,7 @@ for iter = 1:num_iters
     %
 
     err = X * theta - y;
-    theta = theta - alpha / m * (sum(err .* X)');
-
-
-
-
-
-
-
-
+    theta = theta - alpha / m * (sum(repmat(err, 1, size(X, 2)) .* X)');
 
     % ============================================================
 
