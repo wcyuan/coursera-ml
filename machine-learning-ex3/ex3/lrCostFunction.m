@@ -36,14 +36,20 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+h = sigmoid(X * theta);
 
+reg_theta = theta;
+reg_theta(1) = 0;
 
+% Cost
+J = 1 / m * sum(-y.*log(h) - (1-y).*log(1 - h));
+% Add the regularization term
+J += lambda / 2 / m * sum(reg_theta' * reg_theta);
 
-
-
-
-
-
+% Gradient
+grad = 1 / m .* sum(repmat((h-repmat(y, 1, size(h,2))), 1, size(X,2)) .* X);
+% Add the regularization term (but not for theta(1))
+grad +=  lambda / m * reg_theta';
 
 % =============================================================
 
