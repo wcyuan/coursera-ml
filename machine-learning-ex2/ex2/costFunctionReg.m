@@ -18,9 +18,19 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 
 
+h = sigmoid(X * theta);
 
+% Cost
+J = 1 / m * sum(-y.*log(h) - (1-y).*log(1 - h));
+% Add the regularization term
+J += lambda / 2 / m * (sum(theta' * theta) - theta(1)^2);
 
-
+% Gradient
+grad = 1 / m .* sum(repmat((h-repmat(y, 1, size(h,2))), 1, size(X,2)) .* X);
+% Add the regularization term (but not for theta(1))
+reg = lambda / m * theta;
+reg(1) = 0;
+grad += reg';
 
 % =============================================================
 
