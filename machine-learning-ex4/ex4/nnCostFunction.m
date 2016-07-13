@@ -39,6 +39,32 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
+
+A1 = [ones(m, 1) X];
+A2 = sigmoid(A1*Theta1');
+A2 = [ones(size(A2, 1), 1) A2];
+h = sigmoid(A2*Theta2');
+
+% y is a list of labels, integers from 1 to 10.
+% We want y to be a list of vectors, where each vector has 10 elements
+% which are all zero except one 1, which is where the label is.
+% This line converts between the two.
+% linspace(1, num_labels, num_labels) = [1 2 3 4 5 6 7 8 9 10]
+% repmat of that creates a matrix that is just that vector repeated m times
+% Then we compare each row to each y.
+convert_y = repmat(y, 1, num_labels) == repmat(linspace(1, num_labels, num_labels), m, 1);
+
+% Cost
+J = 1 / m * sum(sum(-convert_y.*log(h) - (1-convert_y).*log(1 - h)));
+
+% Add the regularization term
+Theta1_reg = Theta1;
+Theta2_reg = Theta2;
+Theta1_reg(:,1) = 0;
+Theta2_reg(:,1) = 0;
+J += lambda / 2 / m * (sum(sum(Theta1_reg .* Theta1_reg)) + sum(sum(Theta2_reg .* Theta2_reg)));
+
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
