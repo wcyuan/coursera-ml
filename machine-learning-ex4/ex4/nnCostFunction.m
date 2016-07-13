@@ -40,10 +40,14 @@ Theta2_grad = zeros(size(Theta2));
 %         computed in ex4.m
 %
 
-A1 = [ones(m, 1) X];
-A2 = sigmoid(A1*Theta1');
+A1 = X;
+A1 = [ones(size(A1, 1), 1) A1];
+Z2 = A1*Theta1';
+A2 = sigmoid(Z2);
 A2 = [ones(size(A2, 1), 1) A2];
-h = sigmoid(A2*Theta2');
+Z3 = A2*Theta2';
+A3 = sigmoid(Z3);
+h = A3;
 
 % y is a list of labels, integers from 1 to 10.
 % We want y to be a list of vectors, where each vector has 10 elements
@@ -79,6 +83,30 @@ J += lambda / 2 / m * (sum(sum(Theta1_reg .* Theta1_reg)) + sum(sum(Theta2_reg .
 %         Hint: We recommend implementing backpropagation using a for-loop
 %               over the training examples if you are implementing it for the 
 %               first time.
+
+%
+% This all seems pretty messy, I sort of just added
+% 1 to some dimensions and transposed whereever I needed
+% to in order to get the dimensions to line up.  Not sure
+% I understand why all that maneuvering was necessary.
+%
+
+DELTA1 = zeros(size(Theta1, 1)+1, size(Theta1, 2));
+DELTA2 = zeros(size(Theta2, 1), size(Theta2, 2));
+
+for c = 1:m
+    delta3 = A3(c,:) - convert_y(c,:);
+    delta3 = delta3';
+    delta2 = (Theta2' * delta3)';
+    delta2 = delta2 .* A2(c,:) .* (1 - A2(c,:));
+    delta2 = delta2';
+    DELTA2 = DELTA2 + delta3 * A2(c,:);
+    DELTA1 = DELTA1 + delta2 * A1(c,:);
+endfor
+Theta1_grad = DELTA1(2:end,:) / m;
+Theta2_grad = DELTA2(1:size(Theta2, 1),:) / m;
+
+
 %
 % Part 3: Implement regularization with the cost function and gradients.
 %
