@@ -20,6 +20,22 @@ grad = zeros(size(theta));
 %
 
 
+h = X * theta;
+
+
+% Cost
+J = 1 / 2 / m * sum((h - y) .^ 2);
+
+% Add the regularization term
+reg_theta = theta;
+reg_theta(1) = 0;
+J += lambda / 2 / m * sum(reg_theta .^ 2);
+
+% Gradient
+grad = 1 / m .* sum(repmat((h - y), 1, size(X, 2)) .* X);
+
+% Add the regularization term (but not for theta(1))
+grad +=  lambda / m * reg_theta';
 
 
 
