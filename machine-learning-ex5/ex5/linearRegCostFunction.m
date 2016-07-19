@@ -19,7 +19,6 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
-
 h = X * theta;
 
 
@@ -36,15 +35,6 @@ grad = 1 / m .* sum(repmat((h - y), 1, size(X, 2)) .* X);
 
 % Add the regularization term (but not for theta(1))
 grad +=  lambda / m * reg_theta';
-
-
-
-
-
-
-
-
-
 
 % =========================================================================
 
